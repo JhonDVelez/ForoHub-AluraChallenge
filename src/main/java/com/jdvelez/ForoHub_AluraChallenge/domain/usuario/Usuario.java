@@ -23,7 +23,7 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    private String login;
+    private String email;
     private String clave;
     @Enumerated(EnumType.STRING)
     private Rol rol;
@@ -35,7 +35,7 @@ public class Usuario {
     public Usuario(DatosRegistroUsuario datos) {
         this.rol = datos.rol();
         this.clave = datos.clave();
-        this.login = datos.login();
+        this.email = datos.email();
         this.nombre = datos.nombre();
     }
 }

@@ -22,11 +22,13 @@ public class Topico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String descripcion;
+    private String titulo;
     private String mensaje;
     @Enumerated(EnumType.STRING)
-    private Categoria tipo;
+    private Etiqueta tipo;
     private LocalDateTime fecha;
+    @Enumerated(EnumType.STRING)
+    private Estado estado;
     @ManyToOne
     private Usuario idCreador;
     @OneToMany(mappedBy = "idTopico", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)

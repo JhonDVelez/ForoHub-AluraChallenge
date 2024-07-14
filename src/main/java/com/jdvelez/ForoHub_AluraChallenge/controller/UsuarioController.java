@@ -1,23 +1,61 @@
 package com.jdvelez.ForoHub_AluraChallenge.controller;
 
-import com.jdvelez.ForoHub_AluraChallenge.domain.usuario.DatosRegistroUsuario;
-import com.jdvelez.ForoHub_AluraChallenge.domain.usuario.Usuario;
-import com.jdvelez.ForoHub_AluraChallenge.domain.usuario.UsuarioRepository;
+import com.jdvelez.ForoHub_AluraChallenge.domain.usuario.*;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/usuarios")
 public class UsuarioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @PostMapping
-    public void registrarUsuario(@RequestBody DatosRegistroUsuario datosRegistro){
-        usuarioRepository.save(new Usuario(datosRegistro));
+    @GetMapping
+    public ResponseEntity<Page<DatosListarUsuario>> listarUsuarios(@PageableDefault(size = 2) Pageable paginacion){
+        return ResponseEntity.ok(usuarioRepository.findByActivoTrue(paginacion).map(DatosListarUsuario::new));
     }
+
+    @PostMapping
+    public ResponseEntity<DatosCompletosUsuario> registrarUsuario(@RequestBody @Valid DatosRegistroUsuario datosRegistro,
+                                           UriComponentsBuilder uriComponentsBuilder){
+        Usuario usuario = usuarioRepository.save(new Usuario(datosRegistro));
+        DatosCompletosUsuario datosCompletos = new DatosCompletosUsuario(usuario);
+        URI url = uriComponentsBuilder.path("/usuarios/{id}").buildAndExpand(usuario.getId()).toUri();
+        return ResponseEntity.created(url).body(datosCompletos);
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity<DatosCompletosUsuario> actualizarUsuario(@RequestBody @Valid DatosActualizarUsuario datosActualizados){
+        Usuario usuario = usuarioRepository.getReferenceById(datosActualizados.id());
+        usuario.actualizarUsuario(datosActualizados);
+        return ResponseEntity.ok(new DatosCompletosUsuario(usuario));
+    }
+
+    // delete logico
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity eliminarMedico(@PathVariable Long id) {
+        Usuario medico = usuarioRepository.getReferenceById(id);
+        medico.desactivarUsuario();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DatosCompletosUsuario> retornaDatosMedico(@PathVariable Long id) {
+        Usuario usuario = usuarioRepository.getReferenceById(id);
+        var datosMedico = new DatosCompletosUsuario(usuario);
+        return ResponseEntity.ok(datosMedico);
+    }
+
 }

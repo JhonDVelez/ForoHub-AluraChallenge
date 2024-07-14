@@ -7,11 +7,9 @@ public record DatosRegistroUsuario(
         @NotBlank
         String nombre,
         @NotBlank
+        @Email
         String email,
         @NotBlank
-        @Email
-        String clave,
-        @NotBlank
-        Rol rol
+        String clave
 ) {
 }

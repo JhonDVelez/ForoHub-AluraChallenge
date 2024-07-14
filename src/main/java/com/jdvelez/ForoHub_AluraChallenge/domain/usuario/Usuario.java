@@ -27,15 +27,26 @@ public class Usuario {
     private String clave;
     @Enumerated(EnumType.STRING)
     private Rol rol;
-    @OneToMany(mappedBy = "idCreador", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private Boolean activo;
+    @OneToMany(mappedBy = "idCreador", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private List<Topico> topicos;
-    @OneToMany(mappedBy = "idUsuario", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idUsuario", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private List<Respuesta> respuestas;
 
     public Usuario(DatosRegistroUsuario datos) {
-        this.rol = datos.rol();
+        this.activo = true;
+        this.rol = Rol.ROL_MIEMBRO;
         this.clave = datos.clave();
         this.email = datos.email();
         this.nombre = datos.nombre();
+    }
+
+    public void actualizarUsuario(DatosActualizarUsuario datosActualizados) {
+        if(datosActualizados.nombre() != null)
+            this.nombre = datosActualizados.nombre();
+    }
+
+    public void desactivarUsuario() {
+        this.activo = false;
     }
 }

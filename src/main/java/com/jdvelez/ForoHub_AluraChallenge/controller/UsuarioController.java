@@ -45,17 +45,16 @@ public class UsuarioController {
     // delete logico
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity eliminarMedico(@PathVariable Long id) {
-        Usuario medico = usuarioRepository.getReferenceById(id);
-        medico.desactivarUsuario();
+    public ResponseEntity eliminarUsuario(@PathVariable Long id) {
+        Usuario usuario = usuarioRepository.getReferenceById(id);
+        usuario.desactivarUsuario();
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DatosCompletosUsuario> retornaDatosMedico(@PathVariable Long id) {
+    public ResponseEntity<DatosCompletosUsuario> retornaDatosUsuario(@PathVariable Long id) {
         Usuario usuario = usuarioRepository.getReferenceById(id);
-        var datosMedico = new DatosCompletosUsuario(usuario);
-        return ResponseEntity.ok(datosMedico);
+        return ResponseEntity.ok(new DatosCompletosUsuario(usuario));
     }
 
 }

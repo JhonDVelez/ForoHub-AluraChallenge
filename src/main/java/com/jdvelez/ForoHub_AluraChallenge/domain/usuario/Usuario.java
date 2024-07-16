@@ -34,7 +34,7 @@ public class Usuario implements UserDetails {
 
     public Usuario(DatosRegistroUsuario datos) {
         this.activo = true;
-        this.rol = Rol.ROL_MIEMBRO;
+        this.rol = Rol.MIEMBRO;
         this.clave = datos.clave();
         this.email = datos.email();
         this.nombre = datos.nombre();
@@ -52,7 +52,7 @@ public class Usuario implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(rol.toString()));
+        roles.add(new SimpleGrantedAuthority(this.rol.toString()));
         return roles;
     }
 

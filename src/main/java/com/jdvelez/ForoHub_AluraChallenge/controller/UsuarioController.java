@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -19,6 +20,8 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public ResponseEntity<Page<DatosListarUsuario>> listarUsuarios(@PageableDefault(size = 2) Pageable paginacion){
@@ -28,7 +31,9 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<DatosCompletosUsuario> registrarUsuario(@RequestBody @Valid DatosRegistroUsuario datosRegistro,
                                            UriComponentsBuilder uriComponentsBuilder){
-        Usuario usuario = usuarioRepository.save(new Usuario(datosRegistro));
+        DatosRegistroUsuario reg = new DatosRegistroUsuario(datosRegistro.nombre(), datosRegistro.email(),
+                passwordEncoder.encode(datosRegistro.clave()));
+        Usuario usuario = usuarioRepository.save(new Usuario(reg));
         DatosCompletosUsuario datosCompletos = new DatosCompletosUsuario(usuario);
         URI url = uriComponentsBuilder.path("/usuarios/{id}").buildAndExpand(usuario.getId()).toUri();
         return ResponseEntity.created(url).body(datosCompletos);

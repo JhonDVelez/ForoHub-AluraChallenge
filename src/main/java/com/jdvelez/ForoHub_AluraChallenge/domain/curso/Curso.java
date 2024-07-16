@@ -2,10 +2,7 @@ package com.jdvelez.ForoHub_AluraChallenge.domain.curso;
 
 import com.jdvelez.ForoHub_AluraChallenge.domain.topico.Topico;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -22,7 +19,8 @@ public class Curso {
     private String nombre;
     private String categoria;
     private Boolean activo;
-    @OneToMany(mappedBy = "idCurso", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Setter
+    @OneToMany(mappedBy = "idCurso")
     private List<Topico> topicos;
 
     public Curso(DatosRegistroCurso datosRegistro) {

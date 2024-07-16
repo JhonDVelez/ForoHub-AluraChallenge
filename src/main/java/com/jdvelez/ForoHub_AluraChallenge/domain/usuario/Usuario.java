@@ -1,7 +1,5 @@
 package com.jdvelez.ForoHub_AluraChallenge.domain.usuario;
 
-import com.jdvelez.ForoHub_AluraChallenge.domain.respuesta.Respuesta;
-import com.jdvelez.ForoHub_AluraChallenge.domain.topico.Topico;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -33,10 +31,6 @@ public class Usuario implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Rol rol;
     private Boolean activo;
-    @OneToMany(mappedBy = "idCreador", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    private List<Topico> topicos;
-    @OneToMany(mappedBy = "idUsuario", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    private List<Respuesta> respuestas;
 
     public Usuario(DatosRegistroUsuario datos) {
         this.activo = true;

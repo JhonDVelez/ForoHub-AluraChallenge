@@ -4,10 +4,9 @@ public record DatosCompletosUsuario(
          Long id,
          String nombre,
          String email,
-         Rol rol,
          Boolean activo
 ) {
     public DatosCompletosUsuario(Usuario usuario) {
-        this(usuario.getId(), usuario.getNombre(), usuario.getEmail(), usuario.getRol(), usuario.getActivo());
+        this(usuario.getId(), usuario.getNombre(), usuario.getEmail(), usuario.getActivo());
     }
 }

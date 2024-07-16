@@ -12,28 +12,24 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 
 @RestController
-@RequestMapping("/Cursos")
+@RequestMapping("/cursos")
 public class CursoController{
     @Autowired
     private CursoRepository cursoRepository;
 
     @GetMapping
-    public ResponseEntity<Page<DatosCompletosCurso>> listarCursos(@PageableDefault(size = 2) Pageable paginacion){
-        return ResponseEntity.ok(cursoRepository.findAll(paginacion).map(DatosCompletosCurso::new));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<DatosCompletosCurso> retornaDatosCurso(@PathVariable Long id){
-        Curso curso = cursoRepository.getReferenceById(id);
-        return ResponseEntity.ok(new DatosCompletosCurso(curso));
+    public ResponseEntity<Page<DatosListarCurso>> listarCursos(@PageableDefault(size = 2) Pageable paginacion){
+        return ResponseEntity.ok(cursoRepository.findAll(paginacion).map(DatosListarCurso::new));
     }
 
     @PostMapping
     public ResponseEntity<DatosCompletosCurso> registrarCurso(@RequestBody @Valid DatosRegistroCurso datosRegistro,
                                          UriComponentsBuilder uriComponentsBuilder){
-        Curso curso = new Curso(datosRegistro);
+        Curso curso = cursoRepository.save(new Curso(datosRegistro));
+        curso.setTopicos(new ArrayList<>());
         DatosCompletosCurso datosCompletos = new DatosCompletosCurso(curso);
         URI url = uriComponentsBuilder.path("/usuarios/{id}").buildAndExpand(curso.getId()).toUri();
         return ResponseEntity.created(url).body(datosCompletos);
@@ -47,6 +43,12 @@ public class CursoController{
         return ResponseEntity.ok(new DatosCompletosCurso(curso));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<DatosCompletosCurso> retornaDatosCurso(@PathVariable Long id){
+        Curso curso = cursoRepository.getReferenceById(id);
+        return ResponseEntity.ok(new DatosCompletosCurso(curso));
+    }
+
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity eliminarCurso(@PathVariable Long id){
@@ -54,6 +56,4 @@ public class CursoController{
         curso.desactivarCurso();
         return ResponseEntity.noContent().build();
     }
-
-
 }

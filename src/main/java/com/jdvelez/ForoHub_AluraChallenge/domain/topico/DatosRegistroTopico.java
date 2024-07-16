@@ -1,12 +1,17 @@
 package com.jdvelez.ForoHub_AluraChallenge.domain.topico;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-public record DatosCrearTopico(
+public record DatosRegistroTopico(
         @NotBlank
         String titulo,
         @NotBlank
         String mensaje,
-        Etiqueta etiqueta
+        Etiqueta tipo,
+        @NotNull
+        Long idCurso,
+        @NotNull
+        Long idCreador
 ) {
 }

@@ -3,10 +3,7 @@ package com.jdvelez.ForoHub_AluraChallenge.domain.respuesta;
 import com.jdvelez.ForoHub_AluraChallenge.domain.topico.Topico;
 import com.jdvelez.ForoHub_AluraChallenge.domain.usuario.Usuario;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -22,10 +19,29 @@ public class Respuesta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    private Topico idTopico;
-    @OneToOne
-    private Usuario idUsuario;
     private String mensaje;
     private LocalDateTime fecha;
+    private Boolean activo;
+    @Setter
+    @ManyToOne
+    @JoinColumn(name="topico_id")
+    private Topico idTopico;
+    @Setter
+    @OneToOne
+    @JoinColumn(name="usuario_id")
+    private Usuario idUsuario;
+
+    public Respuesta(DatosRegistroRespuesta datosRegistro) {
+        this.mensaje = datosRegistro.mensaje();
+        this.fecha = LocalDateTime.now();
+        this.activo = true;
+    }
+
+    public void actualizarRespuesta(DatosActualizarRespuesta datosActualizados) {
+        this.mensaje = datosActualizados.mensaje();
+    }
+
+    public void desactivarRespuesta() {
+        this.activo = false;
+    }
 }

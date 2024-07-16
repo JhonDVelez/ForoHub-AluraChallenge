@@ -4,10 +4,7 @@ import com.jdvelez.ForoHub_AluraChallenge.domain.curso.Curso;
 import com.jdvelez.ForoHub_AluraChallenge.domain.respuesta.Respuesta;
 import com.jdvelez.ForoHub_AluraChallenge.domain.usuario.Usuario;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,10 +27,36 @@ public class Topico {
     private LocalDateTime fecha;
     @Enumerated(EnumType.STRING)
     private Estado estado;
-    @ManyToOne
+    @Setter
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="curso_id")
     private Curso idCurso;
-    @ManyToOne
+    @Setter
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="creador_id")
     private Usuario idCreador;
-    @OneToMany(mappedBy = "idTopico", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @Setter
+    @OneToMany(mappedBy = "idTopico")
     private List<Respuesta> respuestas;
+
+    public Topico(DatosRegistroTopico datosRegistro) {
+        this.titulo = datosRegistro.titulo();
+        this.mensaje = datosRegistro.mensaje();
+        if (datosRegistro.tipo() == null)
+            this.tipo = Etiqueta.NINGUNA;
+        else
+            this.tipo = datosRegistro.tipo();
+        this.fecha = LocalDateTime.now();
+        this.estado = Estado.ABIERTO;
+    }
+
+    public void actualizarTopico(DatosActualizarTopico datosActualizados) {
+        this.titulo = datosActualizados.titulo();
+        this.mensaje = datosActualizados.mensaje();
+        this.estado = datosActualizados.estado();
+    }
+
+    public void desactivarTopico(){
+        this.estado = Estado.ELIMINADO;
+    }
 }

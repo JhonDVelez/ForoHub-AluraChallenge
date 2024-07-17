@@ -1,9 +1,9 @@
 package com.jdvelez.ForoHub_AluraChallenge.controller;
 
-import com.jdvelez.ForoHub_AluraChallenge.domain.curso.CursoRepository;
 import com.jdvelez.ForoHub_AluraChallenge.domain.respuesta.*;
 import com.jdvelez.ForoHub_AluraChallenge.domain.topico.TopicoRepository;
 import com.jdvelez.ForoHub_AluraChallenge.domain.usuario.UsuarioRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/topicos")
+@SecurityRequirement(name = "bearer-key")
 public class RespuestaController {
     @Autowired
     private TopicoRepository topicoRepository;

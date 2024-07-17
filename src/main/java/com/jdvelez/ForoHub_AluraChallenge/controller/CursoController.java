@@ -1,6 +1,7 @@
 package com.jdvelez.ForoHub_AluraChallenge.controller;
 
 import com.jdvelez.ForoHub_AluraChallenge.domain.curso.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/cursos")
+@SecurityRequirement(name = "bearer-key")
 public class CursoController{
     @Autowired
     private CursoRepository cursoRepository;
